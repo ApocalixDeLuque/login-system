@@ -46,7 +46,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a style="text-decoration:none" href="index.php">Inicio</a>
             <a style="text-decoration:none" href="about.php">Sobre nosotros</a>
             <a style="text-decoration:none" href="contact.php">Contacto</a>
-            <a class="register" style="text-decoration:none" href="register.php">Registrarse</a>
+            <a class="register" style="text-decoration:none" href="<?php echo isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true ? 'logout.php' : 'register.php'; ?>">
+            <?php
+            if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+                echo "Cerrar sesión";
+            } else {
+                echo "Registrarse";
+            }
+            ?>
+            </a>
         </div>
     </div>
     <div class="mailcontainer">

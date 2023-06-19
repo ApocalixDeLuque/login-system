@@ -30,11 +30,19 @@ session_start();
             <a style="text-decoration:none" href="index.php">Inicio</a>
             <a style="text-decoration:none" href="about.php">Sobre nosotros</a>
             <a style="text-decoration:none" href="contact.php">Contacto</a>
-            <a class="register" style="text-decoration:none" href="register.php">Registrarse</a>
+            <a class="register" style="text-decoration:none" href="<?php echo isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true ? 'logout.php' : 'register.php'; ?>">
+            <?php
+            if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
+                echo "Cerrar sesión";
+            } else {
+                echo "Registrarse";
+            }
+            ?>
+            </a>
         </div>
     </div>
 
-    
+
     <div class="about__body">
         <div class="title">
             <h1 class="container__title"><strong>Sobre Nosotros</strong></h1>
