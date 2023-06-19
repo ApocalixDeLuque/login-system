@@ -1,0 +1,13 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "login-system/html/index.php",
+        "use": "@vercel/vercel-build",
+        "config": {
+          "zeroConfig": true
+        }
+      }
+    ]
+  }
+  
