@@ -242,8 +242,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 value="<?php echo htmlspecialchars($newPassword); ?>">
                             <span class="text-danger"><?php echo $passwordError; ?></span>
                         </div>
-                        <button type="submit" name="toggleRole" class="btn btn-secondary">Alternar rol</button>
                         <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <button type="submit" name="toggleRole" class="btn btn-secondary">Alternar rol</button>
                     </form>
                 </div>
         </div>
