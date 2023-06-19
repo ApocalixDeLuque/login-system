@@ -44,11 +44,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_msg = "El correo ya está en uso. Intenta con uno diferente.";
     } else {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $role = "user";
 
-        $sql = "INSERT INTO users (username, email, password) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)";
 
         if ($stmt = mysqli_prepare($link, $sql)) {
-            mysqli_stmt_bind_param($stmt, "sss", $param_username, $param_email, $param_password);
+            mysqli_stmt_bind_param($stmt, "ssss", $param_username, $param_email, $param_password, $role);
 
             $param_username = $username;
             $param_email = $email;
@@ -59,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 exit;
             } else {
                 $error_msg = "Algo salió mal. Por favor, inténtalo de nuevo más tarde.";
-            }
+            }            
 
             mysqli_stmt_close($stmt);
         }

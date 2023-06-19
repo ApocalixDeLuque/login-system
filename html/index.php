@@ -10,6 +10,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     exit;
 }
 
+
 require_once "config.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -83,6 +84,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a style="text-decoration:none" href="index.php">Inicio</a>
             <a style="text-decoration:none" href="about.php">Sobre nosotros</a>
             <a style="text-decoration:none" href="contact.php">Contacto</a>
+            
             <a class="register" style="text-decoration:none" href="<?php echo isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true ? 'logout.php' : 'register.php'; ?>">
             <?php
             if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {

@@ -45,7 +45,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="navbar__menu">
             <a style="text-decoration:none" href="index.php">Inicio</a>
             <a style="text-decoration:none" href="about.php">Sobre nosotros</a>
-            <a style="text-decoration:none" href="contact.php">Contacto</a>
+            <a style="text-decoration:none" href="contact.php">Contacto
+            <?php if ($_SESSION["role"] === "admin"): ?>
+                <a href="admin.php" class="btn btn-primary">Admin</a>
+            <?php endif; ?>
+
             <a class="register" style="text-decoration:none" href="<?php echo isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true ? 'logout.php' : 'register.php'; ?>">
             <?php
             if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {

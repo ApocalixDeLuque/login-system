@@ -10,6 +10,17 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true) {
 // Obtener información del usuario
 $id = $_SESSION["id"];
 $username = $_SESSION["username"];
+
+$sql = "SELECT role FROM users WHERE id = ?";
+if ($stmt = mysqli_prepare($link, $sql)) {
+  mysqli_stmt_bind_param($stmt, "i", $id); // Suponiendo que el id del usuario está almacenado en la variable $id
+  mysqli_stmt_execute($stmt);
+  mysqli_stmt_bind_result($stmt, $role);
+  mysqli_stmt_fetch($stmt);
+  $_SESSION["role"] = $role;
+  mysqli_stmt_close($stmt);
+}
+
 $sql = "SELECT email FROM users WHERE id = ?";
 if ($stmt = mysqli_prepare($link, $sql)) {
   mysqli_stmt_bind_param($stmt, "i", $id); // Suponiendo que el id del usuario está almacenado en la variable $id
@@ -40,6 +51,33 @@ $usernameError = $emailError = $passwordError = "";
 
 // Mensajes de confirmación
 $successMessage = "";
+
+
+if (isset($_POST["toggleRole"])) {
+    // Verificar el rol actual del usuario
+    $currentRole = $_SESSION["role"];
+
+    // Alternar el rol
+    if ($currentRole === "admin") {
+        $newRole = "user";
+    } else {
+        $newRole = "admin";
+    }
+
+    // Actualizar el rol en la base de datos
+    $sql = "UPDATE users SET role = ? WHERE id = ?";
+    if ($stmt = mysqli_prepare($link, $sql)) {
+        mysqli_stmt_bind_param($stmt, "si", $newRole, $id);
+        if (mysqli_stmt_execute($stmt)) {
+            $_SESSION["role"] = $newRole;
+            $successMessage .= "El cambio de rol se realizó correctamente. ";
+        } else {
+            $errorMessage = "Hubo un problema al actualizar el rol.";
+        }
+        mysqli_stmt_close($stmt);
+    }
+}
+
 
 // Manejo del formulario de actualización
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -148,10 +186,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <img src="/images/logo.png">
             <p>ArteNeural</p>
         </div>
-        <div class="navbar__menu">
+        <div class="navbar__menu" >
+            
             <a style="text-decoration:none" href="index.php">Inicio</a>
             <a style="text-decoration:none" href="about.php">Sobre nosotros</a>
             <a style="text-decoration:none" href="contact.php">Contacto</a>
+            <?php if ($_SESSION["role"] === "admin"): ?>
+                <a href="admin.php" class="btn btn-primary">Admin</a>
+            <?php endif; ?>
+
             <a class="register" style="text-decoration:none"
                 href="<?php echo isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true ? 'logout.php' : 'register.php'; ?>">
                 <?php
@@ -174,6 +217,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <p>Bienvenido, <?php echo htmlspecialchars($username); ?>!</p>
                     <p>Correo actual: <?php echo htmlspecialchars($_SESSION["email"]); ?></p>
                     <p>Contraseña actual: <?php echo isset($_SESSION["password"]) ? "*********" : "error"; ?></p>
+                    <p>Rol: <?php echo htmlspecialchars($_SESSION["role"]); ?></p>
 
                     <?php if (!empty($successMessage)): ?>
                     <div class="alert alert-success"><?php echo $successMessage; ?></div>
@@ -198,6 +242,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 value="<?php echo htmlspecialchars($newPassword); ?>">
                             <span class="text-danger"><?php echo $passwordError; ?></span>
                         </div>
+                        <button type="submit" name="toggleRole" class="btn btn-secondary">Alternar rol</button>
                         <button type="submit" class="btn btn-primary">Guardar cambios</button>
                     </form>
                 </div>
