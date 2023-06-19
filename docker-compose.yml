@@ -7,10 +7,12 @@ services:
     volumes:
       - ./html:/var/www/html
       - ./css:/var/www/css
+      - ./php.ini:/usr/local/etc/php/php.ini
     ports:
       - 8084:80
     depends_on:
       - db
+      - mailhog
 
 
   db:
@@ -24,5 +26,11 @@ services:
       MYSQL_PASSWORD: root1234
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./html:/var/www/html
+      - ./css:/var/www/html/css
     ports:
       - 3307:3306
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025"
